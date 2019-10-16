@@ -1,10 +1,12 @@
 import os
 import requests
 
-from flask import Flask, session, render_template
+from flask import Flask, session, render_template, request, redirect, url_for
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from pprint import pprint
+from user-service import UserService
 
 app = Flask(__name__)
 
@@ -26,11 +28,17 @@ db = scoped_session(sessionmaker(bind=engine))
 def index():
     apiKey = 'h57c2PrwpttY6qmJk0I1Cg'
 
-    return render_template('login.html')
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        user = UserService.getUser(email, password())
+
+
         return 'this is post'
     else:
-        return 'show login'
+        return render_template('login.html')
