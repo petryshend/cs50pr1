@@ -1,10 +1,12 @@
 import os
 import requests
+import re
 
-from flask import Flask, session, render_template, request, redirect, url_for
+from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+
 from pprint import pprint
 
 app = Flask(__name__)
@@ -38,3 +40,30 @@ def login():
         return 'this is post'
     else:
         return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    errors = []
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        password_repeat = request.form['password_repeat']
+        errors = validate_form(email, password, password_repeat)
+        if (not errors):
+            return 'SUCCESS'
+
+    return render_template('register.html', errors=errors)
+
+def validate_form(email, password, password_repeat):
+    errors = {}
+    if (not valid_email(email)):
+        errors['email'] = 'Invalid email'
+    if (len(password) < 4):
+        errors['password'] = 'Password should be at least 4 characters long'
+    if (password != password_repeat):
+        errors['password_repeat'] = 'Passwords does not match'
+    return errors
+
+def valid_email(email):
+    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+    return re.search(regex, email)
