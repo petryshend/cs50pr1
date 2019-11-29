@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block body %}
+
+{% macro input(type, id, label) -%}
+    <label for="{{id}}" class="sr-only">{{label}}</label>
+    <input type="{{type}}"
+            id="{{id}}"
+            name="{{id}}"
+            class="form-control {{ 'is-invalid' if id in errors else '' }}"
+            placeholder="{{label}}"
+            required autofocus>
+    <div class="invalid-feedback">
+      {{ errors[id] if id in errors else '' }}
+    </div>
+{%- endmacro %}
+
+<div class="text-center">
+    <form class="form-signin" action"{{ url_for('register') }}" method="post">
+        <img class="mb-4" src="{{ url_for('static', filename='img/books.svg') }}" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">Registration</h1>
+
+        {{ input('email', 'email', 'Email address') }}
+        {{ input('password', 'password', 'Password') }}
+        {{ input('password', 'password_repeat', 'Repeat password ') }}
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <a href="{{url_for('login')}}">Or login</a>
+        <p class="mt-5 mb-3 text-muted">&copy; 2017-2019</p>
+    </form>
+</div>
+{% endblock %}
