@@ -6,7 +6,6 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from pprint import pprint
-from user-service import UserService
 
 app = Flask(__name__)
 
@@ -35,9 +34,6 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-
-        user = UserService.getUser(email, password())
-
 
         return 'this is post'
     else:
