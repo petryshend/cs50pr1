@@ -14,6 +14,8 @@ from pprint import pprint
 
 app = Flask(__name__)
 
+API_KEY = 'h57c2PrwpttY6qmJk0I1Cg'
+
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
     raise RuntimeError("DATABASE_URL is not set")
@@ -30,9 +32,8 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route('/')
 def index():
-    apiKey = 'h57c2PrwpttY6qmJk0I1Cg'
-
-    return redirect(url_for('login'))
+    check_login()
+    return 'You are logged in as ' + session['user'].email
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -47,9 +48,15 @@ def login():
 
         if not errors:
             # TODO: session, redirect and go on
-            return 'LOGIN SUCCESS'
+            session['user'] = user
+            return redirect(url_for('index'))
 
     return render_template('login.html', errors=errors)
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    del session['user']
+    return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -65,22 +72,22 @@ def register():
             user = User(email, password)
             user = users.insert(user)
             # save to session
-
+            session['user'] = user
             # redirect to mail page
-            return 'SUCCESS'
+            return redirect(url_for('index'))
 
     return render_template('register.html', errors=errors)
 
-@app.route('/books', methods=['GET'])
-def books():
-    return 'You should be logged in'
+def check_login():
+    if not 'user' in session:
+        return redirect(url_for('login'))
 
 def validate_form(email, password, password_repeat):
     users = UserService()
     errors = {}
     if (not valid_email(email)):
         errors['email'] = 'Invalid email'
-    elif (users.user_exists(email)):
+    elif (users.get_by_email(email)):
         errors['email'] = 'User with such email already exists'
     if (len(password) < 4):
         errors['password'] = 'Password should be at least 4 characters long'
