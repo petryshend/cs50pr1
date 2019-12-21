@@ -10,7 +10,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from user import User
 from user_service import UserService
 
-from pprint import pprint
 
 app = Flask(__name__)
 
