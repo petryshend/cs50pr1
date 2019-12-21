@@ -36,13 +36,20 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    users = UserService()
+    errors = {}
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        user = users.get_by_email(email)
+        if not user or not users.verify_password(user.password, password):
+            errors['email'] = 'User or password is not correct'
 
-        return 'this is post'
-    else:
-        return render_template('login.html')
+        if not errors:
+            # TODO: session, redirect and go on
+            return 'LOGIN SUCCESS'
+
+    return render_template('login.html', errors=errors)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -55,7 +62,7 @@ def register():
         errors = validate_form(email, password, password_repeat)
         if (not errors):
             # save user
-            user = new User(email, password)
+            user = User(email, password)
             user = users.insert(user)
             # save to session
 
