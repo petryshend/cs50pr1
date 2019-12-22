@@ -10,6 +10,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from user import User
 from user_service import UserService
 
+from pprint import pprint
 
 app = Flask(__name__)
 
@@ -31,7 +32,8 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route('/')
 def index():
-    check_login()
+    if not logged_in():
+        return redirect(url_for('login'))
     return 'You are logged in as ' + session['user'].email
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -54,7 +56,8 @@ def login():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    del session['user']
+    if 'user' in session:
+        del session['user']
     return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -77,9 +80,8 @@ def register():
 
     return render_template('register.html', errors=errors)
 
-def check_login():
-    if not 'user' in session:
-        return redirect(url_for('login'))
+def logged_in():
+    return 'user' in session
 
 def validate_form(email, password, password_repeat):
     users = UserService()
