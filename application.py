@@ -82,6 +82,17 @@ def search():
     return render_template('search.html', books=books, query=query)
 
 
+@app.route('/book/<book_id>', methods=['GET'])
+def book(book_id):
+    if not logged_in():
+        return redirect(url_for('login'))
+
+    book_service = BookService()
+    book = book_service.get_by_id(book_id)
+
+    return render_template('book.html', book=book)
+
+
 def logged_in():
     return 'user' in session
 

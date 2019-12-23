@@ -17,7 +17,11 @@
 
     <ul>
         {% for book in books %}
-            <li>{{ book.id }}, {{ book.isbn }}, {{ book.title }}, {{ book.author }}, {{ book.year }}</li>
+            <li>
+                <a href="{{ url_for('book', book_id=book.book_id) }}">
+                    {{ book.book_id }}, {{ book.isbn }}, {{ book.title }}, {{ book.author }}, {{ book.year }}
+                </a>
+            </li>
         {% endfor %}
     </ul>
 

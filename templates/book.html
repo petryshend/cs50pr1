@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+    {{ super() }}
+{% endblock %}
+
+{% block body %}
+    This is book page
+
+    <div>
+        {{ book.book_id }}
+        {{ book.title }}
+        {{ book.author }}
+        {{ book.year }}
+        {{ book.isbn }}
+    </div>
+{% endblock %}
