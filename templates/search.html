@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+    {{ super() }}
+{% endblock %}
+
+{% block body %}
+    <form action="{{ url_for('search') }}" method="get">
+      <div class="form-group">
+        <label for="q">Search for Book</label>
+        <input name="q" class="form-control" id="q" aria-describedby="book-search" value="{{ query }}">
+        <small class="form-text text-muted">Enter title, author or ISBN of the book</small>
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+
+    <ul>
+        {% for book in books %}
+            <li>{{ book.id }}, {{ book.isbn }}, {{ book.title }}, {{ book.author }}, {{ book.year }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

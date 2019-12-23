@@ -2,8 +2,6 @@ import os
 import csv
 import time
 
-from pprint import pprint
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 

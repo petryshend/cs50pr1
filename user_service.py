@@ -5,16 +5,16 @@ import binascii
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from params import DATABASE_URL
 from user import User
 
-from pprint import pprint
 
 class UserService:
     SALT_LENGTH = 64
     HASH_ITERATIONS = 100000
 
     def __init__(self):
-        engine = create_engine(os.getenv("DATABASE_URL"))
+        engine = create_engine(os.getenv(DATABASE_URL))
         self.db = scoped_session(sessionmaker(bind=engine))
 
     def get_by_email(self, email: str) -> bool:
@@ -43,7 +43,7 @@ class UserService:
         """Hash a password for storing."""
         salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
         pwdhash = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'),
-                                    salt, self.HASH_ITERATIONS)
+                                      salt, self.HASH_ITERATIONS)
         pwdhash = binascii.hexlify(pwdhash)
         return (salt + pwdhash).decode('ascii')
 
