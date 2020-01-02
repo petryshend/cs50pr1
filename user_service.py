@@ -14,7 +14,7 @@ class UserService:
     HASH_ITERATIONS = 100000
 
     def __init__(self):
-        engine = create_engine(os.getenv(DATABASE_URL))
+        engine = create_engine(DATABASE_URL)
         self.db = scoped_session(sessionmaker(bind=engine))
 
     def get_by_email(self, email: str) -> bool:

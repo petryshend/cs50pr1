@@ -1,6 +1,6 @@
 import re
 
-from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
+from flask import Flask, session, render_template, request, redirect, url_for
 from flask_session import Session
 
 from book_service import BookService
