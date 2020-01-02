@@ -3,6 +3,8 @@ import re
 from flask import Flask, session, render_template, request, redirect, url_for
 from flask_session import Session
 
+from book_review import BookReview
+from book_review_service import BookReviewService
 from book_service import BookService
 from user import User
 from user_service import UserService
@@ -91,6 +93,24 @@ def book(book_id):
     book = book_service.get_by_id(book_id)
 
     return render_template('book.html', book=book)
+
+
+@app.route('/book/<book_id>/review', methods=['POST'])
+def post_review(book_id):
+    if not logged_in():
+        return redirect(url_for('login'))
+
+    review = request.form['review']
+    rate = request.form['rate']
+
+    book_service = BookService()
+    book = book_service.get_by_id(book_id)
+
+    book_review_service = BookReviewService()
+    review = BookReview(book, session['user'], review, rate)
+    book_review_service.insert(review)
+
+    return redirect(url_for('book', book_id=book_id))
 
 
 def logged_in():

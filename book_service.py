@@ -36,4 +36,3 @@ class BookService:
         row = res.fetchone()
 
         return Book(*row)
-
