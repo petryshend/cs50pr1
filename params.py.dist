@@ -1,0 +1,2 @@
+DATABASE_URL = 'test'
+GOODREADS_API_KEY = 'test'

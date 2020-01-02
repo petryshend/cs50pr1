@@ -1,2 +1,0 @@
-DATABASE_URL = 'postgres://etxjpfcegesxmj:1384e02aae64c694f1673392f7fb5b0b1d42966f7415e88d464936054a08205e@ec2-54-247-171-30.eu-west-1.compute.amazonaws.com:5432/da480e79k7d1jp'
-GOODREADS_API_KEY = 'h57c2PrwpttY6qmJk0I1Cg'
