@@ -15,20 +15,25 @@
         {{ book.isbn }}
     </div>
 
-    <form action="{{ url_for('post_review', book_id=book.book_id) }}" method="post">
-        <div class="form-group">
-            <label for="review">Enter your opinion about this book:</label>
-            <textarea class="form-control" name="review" id="review" cols="30" rows="10" required></textarea>
-        </div>
-        <div class="form-check">
-            <h3>Rate this book</h3>
-            {% for rate in range(1, 6) %}
-                <div>
-                    <input type="radio" class="form-check-input" name="rate" id="rate-{{ rate }}" value="{{ rate }}">
-                    <label for="rate-{{ rate }}">{{ rate }}</label>
-                </div>
-            {% endfor %}
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    {% if review %}
+        <div>{{ review.review_text }}</div>
+        <div>{{ review.rate }}</div>
+    {% else %}
+        <form action="{{ url_for('post_review', book_id=book.id) }}" method="post">
+            <div class="form-group">
+                <label for="review">Enter your opinion about this book:</label>
+                <textarea class="form-control" name="review" id="review" cols="30" rows="10" required></textarea>
+            </div>
+            <div class="form-check">
+                <h3>Rate this book</h3>
+                {% for rate in range(1, 6) %}
+                    <div>
+                        <input type="radio" class="form-check-input" name="rate" id="rate-{{ rate }}" value="{{ rate }}">
+                        <label for="rate-{{ rate }}">{{ rate }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    {% endif %}
 {% endblock %}

@@ -92,7 +92,10 @@ def book(book_id):
     book_service = BookService()
     book = book_service.get_by_id(book_id)
 
-    return render_template('book.html', book=book)
+    book_review_service = BookReviewService()
+    review = book_review_service.get_by_book_and_user(book, session['user'])
+
+    return render_template('book.html', book=book, review=review)
 
 
 @app.route('/book/<book_id>/review', methods=['POST'])
