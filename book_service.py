@@ -20,9 +20,12 @@ class BookService:
             OR isbn ILIKE :query
         """
         res = self.db.execute(q, {'query': "%" + query + "%"})
+
         books = []
         for book_id, isbn, title, author, year in res.fetchall():
             books.append(Book(book_id, isbn, title, author, year))
+
+        res.close()
 
         return books
 
@@ -34,5 +37,7 @@ class BookService:
         """
         res = self.db.execute(q, {'book_id': book_id})
         row = res.fetchone()
+
+        res.close()
 
         return Book(*row)

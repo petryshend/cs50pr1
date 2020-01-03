@@ -17,17 +17,18 @@ class UserService:
         engine = create_engine(DATABASE_URL)
         self.db = scoped_session(sessionmaker(bind=engine))
 
-    def get_by_email(self, email: str) -> bool:
+    def get_by_email(self, email: str):
         query = 'SELECT user_id, email, password FROM users WHERE email = :email'
         res = self.db.execute(query, {'email': email})
         row = res.fetchone()
+        res.close()
         if not row:
             return None
         user = User(row['email'], row['password'])
         user.id = row['user_id']
         return user
 
-    def insert(self, user: User) -> User:
+    def insert(self, user: User):
         query = """
         INSERT INTO users (email, password)
         VALUES (:email, :password)

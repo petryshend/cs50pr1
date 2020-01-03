@@ -5,24 +5,26 @@
 {% endblock %}
 
 {% block body %}
-    <form action="{{ url_for('search') }}" method="get">
-      <div class="form-group">
-        <label for="q">Search for Book</label>
-        <input name="q" class="form-control" id="q" aria-describedby="book-search" value="{{ query }}">
-        <small class="form-text text-muted">Enter title, author or ISBN of the book</small>
-      </div>
-      <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+    {% include 'navbar.html' %}
 
-
-    <ul>
-        {% for book in books %}
-            <li>
-                <a href="{{ url_for('book', book_id=book.id) }}">
-                    {{ book.book_id }}, {{ book.isbn }}, {{ book.title }}, {{ book.author }}, {{ book.year }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-
+    <table class="table table-hover">
+        <thead>
+            <th scope="col">ISBN</th>
+            <th scope="col">Author</th>
+            <th scope="col">Title</th>
+            <th scope="col">Year</th>
+        </thead>
+        <tbody>
+            {% for book in books %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('book', book_id=book.id) }}">{{ book.isbn }}</a>
+                    </td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.year }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

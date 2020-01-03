@@ -13,7 +13,7 @@ class BookReviewService:
         engine = create_engine(DATABASE_URL)
         self.db = scoped_session(sessionmaker(bind=engine))
 
-    def insert(self, review: BookReview) -> BookReview:
+    def insert(self, review: BookReview):
         q = """
         INSERT INTO book_review (book_id, user_id, review_text, rate) 
         VALUES (:book_id, :user_id, :review_text, :rate)
@@ -40,6 +40,7 @@ class BookReviewService:
             'user_id': user.id
         })
         row = res.fetchone()
+        res.close()
         if row:
             return BookReview(book=book, user=user, review_text=row['review_text'], rate=row['rate'])
         return None
