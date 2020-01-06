@@ -22,6 +22,18 @@ class UserService:
         res = self.db.execute(query, {'email': email})
         row = res.fetchone()
         res.close()
+        return self.row_to_user(row)
+
+
+    def get_by_id(self, id: int):
+        q = 'SELECT user_id, email, password FROM users where user_id = :user_id'
+        res = self.db.execute(q, {'user_id': id})
+        row = res.fetchone()
+        res.close()
+        return self.row_to_user(row)
+
+
+    def row_to_user(self, row):
         if not row:
             return None
         user = User(row['email'], row['password'])

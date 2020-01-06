@@ -5,6 +5,7 @@ from book import Book
 from book_review import BookReview
 from params import DATABASE_URL
 from user import User
+from user_service import UserService
 
 
 class BookReviewService:
@@ -44,3 +45,22 @@ class BookReviewService:
         if row:
             return BookReview(book=book, user=user, review_text=row['review_text'], rate=row['rate'])
         return None
+
+    def get_reviews(self, book: Book):
+        q = """
+        SELECT review_text, rate, user_id
+        FROM book_review
+        WHERE book_id = :book_id
+        """
+        res = self.db.execute(q, {
+            'book_id': book.id
+        })
+        rows = res.fetchall()
+        res.close()
+
+        user_service = UserService()
+        reviews = []
+        for row in rows:
+            user = user_service.get_by_id(row['user_id'])
+            reviews.append(BookReview(book, user, row['review_text'], row['rate']))
+        return reviews

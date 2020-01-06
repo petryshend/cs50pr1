@@ -1,6 +1,6 @@
 import re
 
-from flask import Flask, session, render_template, request, redirect, url_for
+from flask import Flask, session, render_template, request, redirect, url_for, Response, jsonify
 from flask_session import Session
 
 from book_review import BookReview
@@ -114,6 +114,26 @@ def post_review(book_id):
     book_review_service.insert(review)
 
     return redirect(url_for('book', book_id=book_id))
+
+
+@app.route('/api/<isbn>', methods=['GET'])
+def book_info(isbn):
+    book_service = BookService()
+    book_review_service = BookReviewService()
+    books = book_service.search(isbn)
+    if not books:
+        return Response('Isbn ' + isbn + ' is not found', 404)
+    book = books[0]
+    reviews = book_review_service.get_reviews(book)
+    res = {
+        'title': book.title,
+        'author': book.author,
+        'year': book.year,
+        'isbn': book.isbn,
+        'review_count': len(reviews),
+        'average_score': float(sum(r.rate for r in reviews) / len(reviews))
+    }
+    return jsonify(res)
 
 
 def logged_in():
